@@ -126,6 +126,6 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "yugasairockzz@gmail.com"
-EMAIL_HOST_PASSWORD = "jfyo vtds igut twpy"
+EMAIL_HOST_PASSWORD = "jfyovtdsiguttwpy"
 
 LOGIN_URL = "/accounts/login/"
