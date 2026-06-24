@@ -10,6 +10,11 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "re_3kTwwHgb_tyu94XbEj2aqQBHvhx38Cbdk")
+FROM_EMAIL = os.getenv("FROM_EMAIL", "onboarding@resend.dev")
+
+
 def _load_env_file() -> None:
     env_file = BASE_DIR / ".env"
     if not env_file.exists():
