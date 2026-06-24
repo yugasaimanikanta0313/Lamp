@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Verify OTP | Deepam{% endblock %}
+
+{% block content %}
+<style>
+	.verify-shell {
+		min-height: calc(100vh - 64px);
+		display: grid;
+		place-items: center;
+	}
+	.verify-card {
+		width: min(460px, 100%);
+		background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+		border: 1px solid rgba(255,255,255,0.12);
+		border-radius: 28px;
+		padding: 32px;
+		box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+	}
+	.verify-card h1 {
+		margin: 0 0 10px;
+		font-size: 2rem;
+	}
+	.verify-card p {
+		margin: 0 0 24px;
+		color: var(--muted);
+		line-height: 1.5;
+	}
+	.field {
+		margin-bottom: 18px;
+	}
+	.field label {
+		display: block;
+		margin-bottom: 8px;
+		font-weight: 700;
+	}
+	.field input {
+		width: 100%;
+		padding: 14px 16px;
+		border-radius: 14px;
+		border: 1px solid rgba(255,255,255,0.14);
+		background: rgba(9, 14, 29, 0.8);
+		color: var(--text);
+		outline: none;
+	}
+	.field input:focus {
+		border-color: rgba(255, 213, 107, 0.9);
+		box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.16);
+	}
+	.actions {
+		display: flex;
+		gap: 12px;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 20px;
+	}
+	.button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 14px 20px;
+		border: 0;
+		border-radius: 14px;
+		background: linear-gradient(135deg, var(--accent), var(--accent-2));
+		color: #241400;
+		font-weight: 800;
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.hint {
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+	.errorlist {
+		list-style: none;
+		padding: 0;
+		margin: 8px 0 0;
+		color: #ffb4b4;
+	}
+</style>
+
+<div class="verify-shell">
+	<form class="verify-card" method="post">
+		{% csrf_token %}
+		<h1>Verify OTP</h1>
+		<p>OTP sent to {{ email|default:"your email" }}.</p>
+
+		{% if messages %}
+			{% for message in messages %}
+				<div class="summary" style="margin-bottom:16px;">{{ message }}</div>
+			{% endfor %}
+		{% endif %}
+
+		<div class="field">
+			{{ form.otp.label_tag }}
+			{{ form.otp }}
+			{{ form.otp.errors }}
+		</div>
+
+		<div class="actions">
+			<span class="hint">Enter the 6-digit code sent to your inbox.</span>
+			<button class="button" type="submit">Verify OTP</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

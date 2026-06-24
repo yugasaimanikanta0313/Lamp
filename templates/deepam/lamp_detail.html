@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}{{ lamp.title }}{% endblock %}
+
+{% block content %}
+
+<style>
+
+.detail-card{
+    max-width:1000px;
+    margin:auto;
+    background:linear-gradient(
+        180deg,
+        rgba(255,255,255,0.06),
+        rgba(255,255,255,0.02)
+    );
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:24px;
+    padding:30px;
+    box-shadow:0 18px 40px rgba(0,0,0,.28);
+}
+
+.title{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.title h1{
+    margin:0;
+    font-size:2.3rem;
+}
+
+.title p{
+    color:var(--muted);
+}
+
+.lamp-image{
+    width:100%;
+    overflow:hidden;
+    border-radius:20px;
+    margin-bottom:35px;
+}
+
+.lamp-image img{
+    width:100%;
+    display:block;
+    border-radius:20px;
+}
+
+.lamp-container{
+    display:flex;
+    justify-content:center;
+    margin:35px 0;
+}
+
+.lamp{
+    width:220px;
+    height:220px;
+    position:relative;
+    display:grid;
+    place-items:center;
+}
+
+.lamp::before{
+    content:"";
+    position:absolute;
+    inset:auto 18px 20px 18px;
+    height:35px;
+    border-radius:50%;
+    background:rgba(255,160,120,.25);
+    filter:blur(15px);
+}
+
+.diya-bowl{
+    width:180px;
+    height:110px;
+    border-radius:0 0 90px 90px;
+    position:relative;
+
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.25), transparent 28%),
+        linear-gradient(180deg,#b3487a 0%,#8d2561 55%,#5f1242 100%);
+}
+
+.diya-rim{
+    position:absolute;
+    top:70px;
+    width:180px;
+    height:24px;
+    border-radius:50%;
+    background:
+        linear-gradient(
+            180deg,
+            #ff7f74,
+            #c51d4f 75%,
+            #8b1034
+        );
+}
+
+.wick{
+    position:absolute;
+    top:72px;
+    left:50%;
+    width:8px;
+    height:20px;
+    transform:translateX(-50%);
+    border-radius:4px;
+    background:linear-gradient(
+        180deg,
+        #222,
+        #6d4635
+    );
+}
+
+.flame{
+    position:absolute;
+    top:10px;
+    left:50%;
+    width:34px;
+    height:90px;
+    transform:translateX(-50%);
+    filter:drop-shadow(
+        0 0 18px rgba(255,183,77,.65)
+    );
+}
+
+.flame::before,
+.flame::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    margin:auto;
+    border-radius:
+        50% 50% 50% 50% /
+        65% 65% 35% 35%;
+    animation:flicker .45s infinite;
+}
+
+.flame::before{
+    width:30px;
+    height:82px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fffbe6 0%,
+            #ffd56a 28%,
+            #ff9b3b 68%,
+            rgba(255,121,45,.25) 100%
+        );
+}
+
+.flame::after{
+    width:14px;
+    height:38px;
+    top:18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #ffef9b 40%,
+            #ff9e2f 100%
+        );
+}
+
+.sparkles{
+    position:absolute;
+    inset:-20px -10px auto -10px;
+    height:120px;
+}
+
+.sparkles span{
+    position:absolute;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:rgba(255,220,154,.9);
+    box-shadow:
+        0 0 10px rgba(255,214,127,.8);
+
+    animation:twinkle 1.8s infinite;
+}
+
+.sparkles span:nth-child(1){
+    left:30px;
+    top:30px;
+}
+
+.sparkles span:nth-child(2){
+    left:70px;
+    top:10px;
+}
+
+.sparkles span:nth-child(3){
+    left:150px;
+    top:20px;
+}
+
+.sparkles span:nth-child(4){
+    left:180px;
+    top:60px;
+}
+
+.sparkles span:nth-child(5){
+    left:20px;
+    top:80px;
+}
+
+.unlit .flame,
+.unlit .sparkles{
+    display:none;
+}
+
+@keyframes flicker{
+    0%{
+        transform:scaleY(1) scaleX(1);
+    }
+    25%{
+        transform:scaleY(1.02) scaleX(.96);
+    }
+    50%{
+        transform:scaleY(.96) scaleX(1.03);
+    }
+    75%{
+        transform:scaleY(1.04) scaleX(.98);
+    }
+    100%{
+        transform:scaleY(1) scaleX(1);
+    }
+}
+
+@keyframes twinkle{
+    0%,100%{
+        opacity:.35;
+        transform:scale(.85);
+    }
+    50%{
+        opacity:1;
+        transform:scale(1.2);
+    }
+}
+
+.status{
+    display:block;
+    width:max-content;
+    margin:20px auto;
+    padding:10px 20px;
+    border-radius:999px;
+    background:#22c55e;
+    color:white;
+    font-weight:bold;
+}
+
+.status.off{
+    background:#6b7280;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-top:30px;
+}
+
+.info-box{
+    background:rgba(255,255,255,.05);
+    border-radius:16px;
+    padding:15px;
+}
+
+.info-box h4{
+    margin:0 0 10px;
+    color:var(--accent-2);
+}
+
+.footer-box{
+    margin-top:25px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,255,255,.1);
+}
+
+.back-btn{
+    display:inline-block;
+    margin-top:25px;
+    padding:12px 18px;
+    border-radius:12px;
+    text-decoration:none;
+    color:white;
+    background:rgba(255,159,67,.18);
+    border:1px solid rgba(255,159,67,.3);
+}
+
+</style>
+
+<div class="detail-card">
+
+```
+<div class="title">
+    <h1>{{ lamp.title }}</h1>
+    <p>Sacred Deepam Offering</p>
+</div>
+
+<div class="lamp-image">
+    <img src="{% static 'images/Vishnu.png' %}" alt="Lord Vishnu">
+</div>
+
+<div class="lamp-container {% if not state.is_lit %}unlit{% endif %}">
+
+    <div class="lamp">
+
+        <div class="sparkles">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="diya-rim"></div>
+        <div class="diya-bowl"></div>
+        <div class="wick"></div>
+        <div class="flame"></div>
+
+    </div>
+
+</div>
+
+<span class="status {% if not state.is_lit %}off{% endif %}">
+    {{ state.state_label }}
+</span>
+
+<div class="info-grid">
+
+    <div class="info-box">
+        <h4>Tithi</h4>
+        <div>{{ snapshot.tithi }}</div>
+    </div>
+
+    <div class="info-box">
+        <h4>Nakshatra</h4>
+        <div>{{ snapshot.nakshatra }}</div>
+    </div>
+
+    <div class="info-box">
+        <h4>Yoga</h4>
+        <div>{{ snapshot.yoga }}</div>
+    </div>
+
+    <div class="info-box">
+        <h4>Karana</h4>
+        <div>{{ snapshot.karana }}</div>
+    </div>
+
+    <div class="info-box">
+        <h4>Masa</h4>
+        <div>{{ snapshot.masa }}</div>
+    </div>
+
+    <div class="info-box">
+        <h4>Paksha</h4>
+        <div>{{ snapshot.paksha }}</div>
+    </div>
+
+</div>
+
+<div class="footer-box">
+
+    <p>
+        <strong>{{ state.next_event_label }}</strong><br>
+        {{ state.next_event_display }}
+    </p>
+
+    <p>
+        <strong>Remaining Time</strong><br>
+        {{ state.remaining_display }}
+    </p>
+
+    <a href="{% url 'dashboard' %}" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+</div>
+```
+
+</div>
+
+{% endblock %}
