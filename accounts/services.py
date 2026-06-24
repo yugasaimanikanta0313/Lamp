@@ -18,7 +18,7 @@ def send_login_otp(email: str) -> str:
     # 2. Send Email
     try:
         response = resend.Emails.send({
-            "from": settings.FROM_EMAIL,
+            "from": "onboarding@resend.dev",
             "to": [email],
             "subject": "🔐 Your Deepam Login OTP",
             "html": f"""
